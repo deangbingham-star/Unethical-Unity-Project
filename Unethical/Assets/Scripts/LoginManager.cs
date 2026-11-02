@@ -5,39 +5,45 @@ using UnityEngine;
 
 public class LoginManager : MonoBehaviour
 {
-    private async void Awake()
-    {
-        if(UnityServices.State == ServicesInitializationState.Uninitialized)
-        {
-            Debug.Log("Services Initializing");
-            await UnityServices.InitializeAsync();
-        }
-    }
+    //private async void Awake()
+    //{
+    //    if(UnityServices.State == ServicesInitializationState.Uninitialized)
+    //    {
+    //        Debug.Log("Services Initializing");
+    //        await UnityServices.InitializeAsync();
+    //    }
+    //}
 
-    // Unity Anon sign in
-    async Task SignUpAnonymouslyAsync()
-    {
-        try
-        {
-            await AuthenticationService.Instance.SignInAnonymouslyAsync();
-            Debug.Log("Sign in anonymously succeeded!");
 
-            // Shows how to get the playerID
-            Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}");
+    //public async void StartAnonymousSignIn()
+    //{
+    //    await SignUpAnonymouslyAsync();
+    //}
 
-        }
-        catch (AuthenticationException ex)
-        {
-            // Compare error code to AuthenticationErrorCodes
-            // Notify the player with the proper error message
-            Debug.LogException(ex);
-        }
-        catch (RequestFailedException ex)
-        {
-            // Compare error code to CommonErrorCodes
-            // Notify the player with the proper error message
-            Debug.LogException(ex);
-        }
-    }
+    //// Unity Anon sign in
+    //private async Task SignUpAnonymouslyAsync()
+    //{
+    //    try
+    //    {
+    //        await AuthenticationService.Instance.SignInAnonymouslyAsync();
+    //        Debug.Log("Sign in anonymously succeeded!");
+
+    //        // Shows how to get the playerID
+    //        Debug.Log($"PlayerID: {AuthenticationService.Instance.PlayerId}");
+
+    //    }
+    //    catch (AuthenticationException ex)
+    //    {
+    //        // Compare error code to AuthenticationErrorCodes
+    //        // Notify the player with the proper error message
+    //        Debug.LogException(ex);
+    //    }
+    //    catch (RequestFailedException ex)
+    //    {
+    //        // Compare error code to CommonErrorCodes
+    //        // Notify the player with the proper error message
+    //        Debug.LogException(ex);
+    //    }
+    //}
 
 }
