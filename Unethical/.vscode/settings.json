@@ -56,5 +56,5 @@
         "temp/": true,
         "Temp/": true
     },
-    "dotnet.defaultSolution": "Unethical.sln"
+    "dotnet.defaultSolution": "Unethical.slnx"
 }
