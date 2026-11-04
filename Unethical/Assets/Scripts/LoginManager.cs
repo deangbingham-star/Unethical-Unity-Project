@@ -1,5 +1,7 @@
+using System;
 using System.Threading.Tasks;
 using Unity.Services.Authentication;
+using Unity.Services.Authentication.PlayerAccounts;
 using Unity.Services.Core;
 using UnityEngine;
 
@@ -75,51 +77,82 @@ public class LoginManager : MonoBehaviour
     }
 }
 
-async void SignInOrLinkWithUnity()
+
+    async void SignInOrLinkWithUnity()
 {
-    try
-    {
-        await AuthenticationService.Instance.SignInOrLinkWithUnityAsync(PlayerAccountService.Instance.AccessToken);
-        m_ExternalIds = GetExternalIds(AuthenticationService.Instance.PlayerInfo);
-        UpdateUI();
-    }
-    catch (RequestFailedException ex)
-    {
-        Debug.LogException(ex);
-        SetException(ex);
-    }
-}
 
-
-
-   private async Task LinkWithUnityAsync(string accessToken)
-        {
             try
             {
-                await AuthenticationService.Instance.LinkWithUnityAsync(accessToken);
-                Debug.Log("Link is successful.");
-            }
-            catch (AuthenticationException ex) when (ex.ErrorCode == AuthenticationErrorCodes.AccountAlreadyLinked)
-            {
-                // Prompt the player with an error message.
-                Debug.LogError("This user is already linked with another account. Log in instead.");
-            }
-            catch (AuthenticationException ex)
-            {
-                // Compare error code to AuthenticationErrorCodes
-                // Notify the player with the proper error message
-                Debug.LogException(ex);
+                // 1. Player is not yet authenticated, signing up with Unity
+                if (!AuthenticationService.Instance.IsSignedIn)
+                {
+                    Debug.Log("Signing up with Unity Player Account...");
+                    await AuthenticationService.Instance.SignInWithUnityAsync(PlayerAccountService.Instance.AccessToken);
+                    Debug.Log("Successfully signed up with Unity Player Account");
+                    return;
+                }
+
+                // 2. Player is authenticated, but does not yet have a Unity ID, so let's link
+                if (!HasUnityID())
+                {
+                    Debug.Log("Linking anonymous account to Unity...");
+                    await LinkWithUnityAsync(PlayerAccountService.Instance.AccessToken);
+                    Debug.Log("Successfully linked anonymous account!");
+                    return;
+                }
+
+                // 3. Player has authentication and a Unity ID
+                Debug.Log("Player is already signed in to their Unity Player Account");
             }
             catch (RequestFailedException ex)
             {
-                // Compare error code to CommonErrorCodes
-                // Notify the player with the proper error message
                 Debug.LogException(ex);
             }
+  }
+
+    private bool HasUnityID()
+    {
+        return AuthenticationService.Instance.PlayerInfo.GetUnityId() != null;
+    }
+
+
+    public async Task LinkWithUnityAsync(string accessToken)
+    {
+        try
+        {
+            await AuthenticationService.Instance.LinkWithUnityAsync(accessToken);
+            Debug.Log("Link is successful.");
         }
+        catch (AuthenticationException ex) when (ex.ErrorCode == AuthenticationErrorCodes.AccountAlreadyLinked)
+        {
+            // Prompt the player with an error message.
+            Debug.LogError("This user is already linked with another account. Log in instead.");
+        }
+        catch (AuthenticationException ex)
+        {
+            // Compare error code to AuthenticationErrorCodes
+            // Notify the player with the proper error message
+            Debug.LogException(ex);
+        }
+        catch (RequestFailedException ex)
+        {
+            // Compare error code to CommonErrorCodes
+            // Notify the player with the proper error message
+            Debug.LogException(ex);
+        }
+    }
+
+
 
 
 }
+
+
+
+  
+
+
+
 
 //MY ID
 //GPEe5wSvdj39LHmthh1cR7k9Jshz  
