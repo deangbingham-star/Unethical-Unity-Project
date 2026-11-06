@@ -17,7 +17,7 @@ public class LoginManager : MonoBehaviour
         PlayerAccountService.Instance.SignedIn += SignInOrLinkWithUnity;
     }
 
-    void start()
+    async void Start()
     {
         if(!AuthenticationService.Instance.SessionTokenExists)
         {
@@ -68,12 +68,12 @@ public class LoginManager : MonoBehaviour
     }
     try
     {
-        await playerAccountService.Instance.StartSignInAsync();
+        await PlayerAccountService.Instance.StartSignInAsync();
     }
     catch (RequestFailedException ex)
     {
         Debug.LogException(ex);
-        SetException(ex);
+        
     }
 }
 

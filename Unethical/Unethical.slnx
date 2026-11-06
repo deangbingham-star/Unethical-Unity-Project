@@ -1,3 +1,5 @@
 ﻿<Solution>
   <Project Path="Assembly-CSharp.csproj" />
+  <Project Path="Sample_CloudCodeModulesHello.csproj" />
+  <Project Path="Sample_CloudCodeScriptsHello.csproj" />
 </Solution>
